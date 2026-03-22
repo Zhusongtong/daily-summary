@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: #0d1117;
+    color: #e6edf3;
+    line-height: 1.7;
+    padding: 20px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .header {
+    text-align: center;
+    padding: 32px 0 24px;
+    border-bottom: 1px solid #21262d;
+    margin-bottom: 32px;
+  }
+  .header .badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+  .header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #f0f6fc;
+    margin-bottom: 6px;
+  }
+  .header .date {
+    font-size: 13px;
+    color: #7d8590;
+  }
+  .section {
+    margin-bottom: 36px;
+  }
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #7d8590;
+    margin-bottom: 16px;
+  }
+  .section-title .icon {
+    font-size: 16px;
+  }
+  .card {
+    background: #161b22;
+    border: 1px solid #21262d;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(to bottom, #7c3aed, #a855f7);
+    border-radius: 3px 0 0 3px;
+  }
+  .card.podcast::before {
+    background: linear-gradient(to bottom, #f59e0b, #fb923c);
+  }
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    gap: 12px;
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #f0f6fc;
+    line-height: 1.4;
+  }
+  .card-subtitle {
+    font-size: 12px;
+    color: #7d8590;
+    margin-top: 4px;
+  }
+  .tag {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .tag-podcast {
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+  }
+  .tag-tweet {
+    background: rgba(124, 58, 237, 0.15);
+    color: #a855f7;
+  }
+  .takeaway {
+    background: rgba(124, 58, 237, 0.1);
+    border-left: 3px solid #7c3aed;
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 14px;
+    font-size: 14px;
+    color: #c9d1d9;
+  }
+  .takeaway-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #7c3aed;
+    margin-bottom: 4px;
+  }
+  .body-text {
+    font-size: 14px;
+    color: #c9d1d9;
+    margin-bottom: 14px;
+  }
+  .body-text strong {
+    color: #f0f6fc;
+  }
+  .quote {
+    background: #0d1117;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 14px 0;
+    position: relative;
+  }
+  .quote::before {
+    content: '"';
+    position: absolute;
+    top: -8px;
+    left: 14px;
+    font-size: 48px;
+    color: #7c3aed;
+    opacity: 0.4;
+    line-height: 1;
+  }
+  .quote p {
+    font-size: 14px;
+    color: #e6edf3;
+    font-style: italic;
+    position: relative;
+    z-index: 1;
+  }
+  .topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 14px;
+  }
+  .topic {
+    font-size: 11px;
+    background: #21262d;
+    color: #7d8590;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #7c3aed;
+    color: #fff;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 8px;
+    margin-top: 12px;
+    transition: background 0.2s;
+  }
+  .link-btn:hover { background: #6d28d9; }
+  .link-btn.yt { background: #ff0000; }
+  .link-btn.yt:hover { background: #cc0000; }
+  .footer {
+    text-align: center;
+    padding: 24px 0;
+    border-top: 1px solid #21262d;
+    margin-top: 40px;
+    font-size: 12px;
+    color: #484f58;
+  }
+  .footer a { color: #7d8590; text-decoration: none; }
+  .builder-name { font-weight: 700; color: #f0f6fc; }
+  .builder-meta { font-size: 12px; color: #7d8590; }
+  .divider { border: none; border-top: 1px solid #21262d; margin: 16px 0; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">🖤 AI Builders Digest</div>
+  <h1>追踪建造者，而非网红</h1>
+  <div class="date">2026 年 3 月 22 日 · 每日更新</div>
+</div>
+
+<div class="section">
+  <div class="section-title"><span class="icon">🎙️</span> Podcast · 本期深度解读</div>
+
+  <div class="card podcast">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Andrej Karpathy：Code Agents、AutoResearch<br>与 AI 的"精神病"时代</div>
+        <div class="card-subtitle">No Priors Podcast · 2026-03-20</div>
+      </div>
+      <span class="tag tag-podcast">🎧 播客</span>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">💡 一句话收获</div>
+      AI 能力的爆发让真正的瓶颈变成了"人"本身——不是你能不能做到，而是你能不能高效地管理算力、管理 agent、管理自己的注意力。
+    </div>
+
+    <div class="body-text">
+      Andrej Karpathy 是前 OpenAI 研究员、特斯拉 Autopilot 负责人，也是 AI 领域最有影响力的技术思想者之一。这期播客信息密度极大，他从多个维度拆解了 AI 时代的工作方式正在如何被彻底重构。
+    </div>
+
+    <hr class="divider">
+
+    <div class="body-text"><strong>一、"AI 精神病"：从 80/20 到 20/80</strong><br><br>
+    去年 12 月是一个转折点。Karpathy 发现自己从"80% 代码自己写"直接反转成"80% 交给 agent"。他说："我不认为我自 12 月以来手写过一行代码，这是一次极其剧烈的变化。"<br><br>
+    核心变化在于：<strong>你不再是一个执行者，而是一个管理者。</strong>你要学会的是——如何同时管理多个 agent，如何给它们分配不互相干扰的任务，如何成为一个优秀的"prompt engineer"。
+    </div>
+
+    <div class="quote">
+      <p>"16 个小时里我要做的事情就是 manifest——把我的意志传达给 agent。manifest。manifest。我的问题不是'怎么写这一行代码'，而是'怎么同时管理 10 个 agent，让它们分别去检入不同的 repo、承担不同的功能块'。"</p>
+    </div>
+
+    <div class="body-text"><strong>二、Dobby：AI 家庭管家的示范</strong><br><br>
+    Karpathy 真的用 agent 做了一个家庭自动化系统，叫 Dobby。实现过程匪夷所思：<br><br>
+    · 告诉 agent "家里可能有 Sonos" → agent 扫描局域网、发现设备、<strong>逆向工程了 Sonos 的 API</strong>，直接操控播放<br>
+    · 同样方式搞定所有灯光、HVAC、泳池、SPA、安防系统<br>
+    · 门口摄像头 + 变化检测 + Quinn 模型 → 自动识别来访者 → WhatsApp 通知："FedEx 货车到了，有你的件"<br><br>
+    他以前要开 6 个不同的 App，现在一句自然语言全部搞定。
+    </div>
+
+    <div class="quote">
+      <p>"我不相信有人真正意识到这件事发生得有多快、有多剧烈。如果你随机走进一个软件工程师的工位，看看他们现在在干什么——他们构建软件的工作流程，自 12 月以来已经彻底不同了。"</p>
+    </div>
+
+    <div class="body-text"><strong>三、Token 即算力：你才是瓶颈</strong><br><br>
+    他的反直觉观点：以前工程师是 GPU 瓶颈，现在是 <strong>token 瓶颈</strong>——如果你还有配额没用完，你会感到焦虑，因为这意味着你没有最大化你的吞吐量。<br><br>
+    他把这形容为"psychosis"——一种持续的、永无止境的、可能性无限的焦虑感。<strong>这不是能力问题，是技能问题。</strong>当你驾驭不了 agent，不是 AI 不够好，是你还没有找到正确的组合方式。
+    </div>
+
+    <div class="body-text"><strong>四、AutoResearch：把人类彻底踢出循环</strong><br><br>
+    他尝试让 agent 自动优化 NanoGPT 的超参数——跑了一晚上，回来发现它找到了他忘记设置的 <strong>weight decay on value embeddings</strong>，以及不充分的 atom betas 调优。<br><br>
+    这让他意识到：未来的"研究组织"，本质上就是一套 markdown 文件，描述各种角色和协作流程——而这套文件本身，也会被 agent 不断优化（Meta optimization）。他甚至提出了 Contest 想法：让全世界的人写不同的 Program.md，在同等算力下看谁能让模型进步最多，然后把数据喂给 LLM，让它写出更好的 Program.md。
+    </div>
+
+    <div class="body-text"><strong>五、AI 的"锯齿"：RL 能优化的一切 vs. 无法优化的一切</strong><br><br>
+    这是他最深刻的观察：可验证的领域（代码、CUDA kernel、单元测试）RL 可以无限优化，表现惊人。但在"软"的领域——幽默、nuance、微妙判断——<strong>完全没有进步</strong>。<br><br>
+    证据：让 ChatGPT 讲笑话，它给你的还是"为什么科学家不信任原子？因为它们组成一切"——和五年前一模一样。"因为它不在 RL 的优化范围内，所以被锁死了。"<br><br>
+    Karpathy 认为：<strong>通用智能不等于所有领域同步进步</strong>。在可验证和不可验证之间，存在一道深深的裂缝。
+    </div>
+
+    <div class="topics">
+      <span class="topic">AI Agent</span>
+      <span class="topic">AutoResearch</span>
+      <span class="topic">算力瓶颈</span>
+      <span class="topic">Home Automation</span>
+      <span class="topic">RL 局限</span>
+      <span class="topic">Agentic Workflow</span>
+    </div>
+
+    <a href="https://youtube.com/watch?v=kwSVtQ7dziU" class="link-btn yt">▶ 观看完整播客</a>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title"><span class="icon">🐦</span> X / Twitter · 精华观点</div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="builder-name">Zara Zhang</div>
+        <div class="builder-meta">Builder · Harvard '17</div>
+      </div>
+      <span class="tag tag-tweet">💬 Tweet</span>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">💡 反直觉洞察</div>
+      AI 让每个人效率提升 10 倍，结果不是大家更闲了，而是所有人同时承担了 20 倍的工作量——生产力的解放反而带来了更大的压力。
+    </div>
+    <div class="body-text">
+      这是本期最值得深思的一条推文。Zara 观察到：几乎每一个她认识的 AI 重度用户，在使用 AI 之后反而<strong>更焦虑、更忙碌</strong>了。<br><br>
+      人们的预期：AI → 10 倍效率 → 早点干完活 → 放松<br>
+      实际发生：AI → 10 倍效率 → 可能性扩展 20 倍 → 承担更多工作 → 更累<br><br>
+      这是一个关于"效率悖论"的深刻洞察：当约束（时间）消失之后，真正被解放的不是休闲，而是野心。
+    </div>
+    <a href="https://x.com/zarazhangrui/status/2035251996564103267" class="link-btn">🔗 查看原推</a>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="builder-name">Thariq</div>
+        <div class="builder-meta">Claude Code · Anthropic</div>
+      </div>
+      <span class="tag tag-tweet">💬 Tweet</span>
+    </div>
+    <div class="body-text">
+      Thariq 直言：<strong>Agent SDK 是构建 agent 最简单的方式。</strong>他在开发一个"streaming dev process"（流式开发过程），想让开发过程实时可见但又不想"被看到"（getting owned），透露出 Claude Code 正在往更深度集成方向走。
+    </div>
+    <a href="https://x.com/trq212/status/2035372729726087456" class="link-btn">🔗 查看原推</a>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="builder-name">Ryo Lu</div>
+        <div class="builder-meta">Design · Cursor_ai</div>
+      </div>
+      <span class="tag tag-tweet">💬 Tweet</span>
+    </div>
+    <div class="body-text">
+      Cursor 设计负责人暗示：<strong>"still early, but clearer now"</strong>——AI 代码工具的终局已经开始清晰。结合引用的那条关于 AI 编程未来的深度对话，Cursor 可能正在深耕：更自然的交互范式 + 多 agent 协作。
+    </div>
+    <a href="https://x.com/ryolu_/status/2035355825477447907" class="link-btn">🔗 查看原推</a>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="builder-name">Garry Tan</div>
+        <div class="builder-meta">President & CEO · Y Combinator</div>
+      </div>
+      <span class="tag tag-tweet">💬 Tweet</span>
+    </div>
+    <div class="body-text">
+      Garry Tan 开源了他的个人 CLI 工具集 <strong>gstack</strong>。"这是我的 CLI，有很多类似的东西，但这个是我的。"背后信息：YC 正在系统性推动"builder 工具"的民主化，让独立开发者也能用上顶级的基础设施。
+    </div>
+    <a href="https://x.com/garrytan/status/2035539745284177982" class="link-btn">🔗 查看原推</a>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="builder-name">Dan Shipper</div>
+        <div class="builder-meta">CEO · Every</div>
+      </div>
+      <span class="tag tag-tweet">💬 Tweet</span>
+    </div>
+    <div class="body-text">
+      Dan Shipper 在 Figma 股价低迷时买入 $5000 股票。逻辑：<strong>SaaS 公司正在积极拥抱 AI 转型</strong>，这是被低估的方向。Figma 作为设计工具的核心枢纽，在 AI 辅助设计的大趋势下有独特的战略位置。
+    </div>
+    <a href="https://x.com/danshipper/status/2035365060118253848" class="link-btn">🔗 查看原推</a>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="builder-name">Matt Turck</div>
+        <div class="builder-meta">VC · FirstMark Capital</div>
+      </div>
+      <span class="tag tag-tweet">💬 Tweet</span>
+    </div>
+    <div class="body-text">
+      Matt Turck 从历史视角提问：LinkedIn (2003)、YouTube (2005)、Twitter (2006) 能持续统治十几年，核心是<strong>网络效应带来的长期护城河</strong>。那么 AI 时代能否建立类似的飞轮（数据循环、用户行为增强模型）？这是所有 AI 公司最核心的战略问题。
+    </div>
+    <a href="https://x.com/mattturck/status/2035458987940880466" class="link-btn">🔗 查看原推</a>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="builder-name">Peter Yang</div>
+        <div class="builder-meta">Product · Roblox</div>
+      </div>
+      <span class="tag tag-tweet">💬 Tweet</span>
+    </div>
+    <div class="body-text">
+      Peter Yang 发了一条"soft question"问大家怎么在 Claude 和 Codex 之间切换工作流，引发了关于<strong>多 AI 模型协作</strong>的实战讨论。他在 4 月初要回上海/杭州探亲，十年没回去了，对国内科技圈的发展很好奇。
+    </div>
+    <a href="https://x.com/petergyang/status/2035564345430872095" class="link-btn">🔗 查看原推</a>
+  </div>
+</div>
+
+<div class="footer">
+  AI Builders Digest · 每日追踪 AI 领域顶尖建造者的声音<br>
+  信息源由中心化统一管理，自动更新<br><br>
+  回复本消息可调整摘要风格或推送设置
+</div>
+
+</body>
+</html>
